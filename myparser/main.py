@@ -1,15 +1,8 @@
 import argparse
 from pathlib import Path
 from shlex import split
+from myparser.Commands import commands, cd
 import os
-
-def cd(path):
-    os.chdir(path)
-
-commands = {
-    'cd' : cd,
-}
-
 def manipulation():
     while(True):
         ip = input('')
@@ -28,11 +21,11 @@ def manipulation():
             command = tokens[0]
         
         if command in commands:
-            commands['cd'](arguments)
+            commands[command](arguments)
         else:
             print("Not a valid command")
         
-        print(Path.cwd(),'$>',end=' ')
+        print('\n',Path.cwd(),'$>',end=' ')
         
 
 def main():
@@ -50,7 +43,7 @@ def main():
     os.chdir(r'C:\Users\manmo')
     
     if args.myp:
-        print(Path.cwd(),'$>',end=' ')
+        print('\n',Path.cwd(),'$>',end=' ')
         manipulation()
 
 if __name__ == '__main__':
