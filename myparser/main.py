@@ -1,7 +1,7 @@
 import argparse
 from pathlib import Path
 from shlex import split
-from myparser.Commands import commands, cd
+from myparser.Commands import commands
 import os
 
 
