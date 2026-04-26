@@ -3,48 +3,48 @@ from pathlib import Path
 from shlex import split
 from myparser.Commands import commands, cd
 import os
+
+
 def manipulation():
-    while(True):
-        ip = input('')
-        if ip=='quit' or ip=='exit':
+    while True:
+
+        # Handling user Input and Tokenization
+        userInput = input("")
+        if userInput == "quit" or userInput == "exit":
             break
-        
-        tokens = split(ip)
-        if len(tokens) == 3:
-            command = tokens[0]
-            flag = tokens[1]
-            arguments = tokens[2]
-        elif len(tokens) == 2:
-            command = tokens[0]
-            arguments = tokens[1]
-        else:
-            command = tokens[0]
-        
+
+        tokens = split(userInput)
+        command = tokens[0]
+        flags = [word for word in tokens[1:] if word.startswith("-")]
+        arguments = [word for word in tokens[1:] if not word.startswith("-")]
+
+        # Executing commands
         if command in commands:
-            commands[command](arguments)
+            commands[command](arguments, flags)
         else:
-            print("Not a valid command")
-        
-        print('\n',Path.cwd(),'$>',end=' ')
-        
+            print("Not a valid command, please enter a valid command")
+
+        print("\n", Path.cwd(), ">>", end=" ")
+
 
 def main():
     parser = argparse.ArgumentParser(
-                    prog='main.py',
-                    description='Start the CLI file manager',
-                    epilog='End of the help!!')
-
+        prog="main.py",
+        description="Start the CLI file manager",
+        epilog="End of the help!!",
+    )
 
     parser.add_argument(
-        '-start_myp', '--myp', action='store_true', help='name of the folder or file'
+        "-start", "--myp", action="store_true", help="name of the folder or file"
     )
     args = parser.parse_args()
-    
-    os.chdir(r'C:\Users\manmo')
-    
+
+    os.chdir(r"C:\Users\manmo")
+
     if args.myp:
-        print('\n',Path.cwd(),'$>',end=' ')
+        print("\n", Path.cwd(), ">>", end=" ")
         manipulation()
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     main()
