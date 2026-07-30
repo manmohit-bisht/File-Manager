@@ -26,7 +26,6 @@ def listdir(arguments, flags):
         items = [item for item in p.iterdir() if not item.name.startswith(".")]
     else:
         items = list(p.iterdir())
-
     if "-asc" in flags and "-desc" in flags:
         print("Conflicting flags")
         return
