@@ -2,7 +2,7 @@ import argparse
 from pathlib import Path
 from shlex import split
 import os
-import myparser.Commands
+import myparser.commands
 from myparser.registry import COMMAND_REGISTRY
 
 

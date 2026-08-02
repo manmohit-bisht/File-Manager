@@ -1,6 +1,6 @@
 import os
 from pathlib import Path
-from .Flags import flags
+from .flags import flags
 from .registry import command
 
 
