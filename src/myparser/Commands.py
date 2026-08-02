@@ -1,6 +1,5 @@
 import os
 from pathlib import Path
-from .flags import flags
 from .registry import command
 
 
@@ -15,7 +14,7 @@ def cd(arguments, flags):
 
 
 @command("listdir", allowed_flags=["-full", "-asc", "-desc", "-hidden"])
-def listdir(arguments, flags):
+def listdir(arguments, allowed_flags):
     if not arguments:
         path = Path.cwd()
     else:
@@ -24,18 +23,18 @@ def listdir(arguments, flags):
 
     # Applying flag effects
     items = []
-    if not "-hidden" in flags:
+    if not "-hidden" in allowed_flags:
         items = [item for item in p.iterdir() if not item.name.startswith(".")]
     else:
         items = list(p.iterdir())
-    if "-asc" in flags and "-desc" in flags:
-        print("Conflicting flags")
+    if "-asc" in allowed_flags and "-desc" in allowed_flags:
+        print("Conflicting allowed_flags")
         return
-    if "-asc" in flags:
+    if "-asc" in allowed_flags:
         items.sort()
-    if "-desc" in flags:
+    if "-desc" in allowed_flags:
         items.sort(reverse=True)
-    if "-full" in flags:
+    if "-full" in allowed_flags:
         print("")
         for item in items:
             print(item)
