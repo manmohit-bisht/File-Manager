@@ -15,11 +15,14 @@ def manipulation():
         if userInput == "quit" or userInput == "exit":
             break
 
-        tokens = split(userInput)
+        tokens = split(userInput, posix=False)
         cmd_name = tokens[0]
-        flags = [word for word in tokens[1:] if word.startswith("-")]
         arguments = [word for word in tokens[1:] if not word.startswith("-")]
-
+        arguments = [arg.strip('"') for arg in arguments]
+        flags = [word for word in tokens[1:] if word.startswith("-")]
+        print(tokens)
+        print(arguments)
+        print(flags)
         # Executing commands
         if cmd_name not in COMMAND_REGISTRY:
             print("Not a valid command, please enter a valid command")
