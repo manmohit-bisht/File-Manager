@@ -16,7 +16,7 @@ def cd(arguments, allowed_flags):
     path = Path(arguments[0])
 
     if not path.exists():
-        print("Please enter a valid path")
+        print("Please enter a valid path that exists")
         return
 
     if not path.is_dir():
@@ -91,3 +91,26 @@ def rename(arguments, allowed_flags):
         print("Permission denied.")
     except OSError as e:
         print(f"Rename failed: {e}")
+
+
+@command("execute", allowed_flags=[])
+def execute(arguments, allowed_flags):
+    if len(arguments) != 1:
+        print("Error: Enter 1 valid argument!")
+        return
+
+    if allowed_flags:
+        print("This command doesn't accept flags")
+        return
+
+    path = Path(arguments[0])
+    if not path.exists():
+        print("Enter a valid path to a file!!")
+        return
+    if not path.is_file():
+        print("Error: in which OS can you execute a folder!!")
+        return
+    try:
+        os.startfile(path)
+    except OSError as e:
+        print(f"Execution failed: {e}")
