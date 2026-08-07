@@ -154,3 +154,21 @@ def mkfile(arguments, allowed_flags):
         print("You don't have the permission to create fille here")
     except OSError as e:
         print(f"ERROR: {e}")
+
+
+@command("delfile", allowed_flags=[])
+def delfile(arguments, allowed_flags):
+    if len(arguments) > 1:
+        print("ERROR: mkfile <file name or file path>")
+        return
+    if len(allowed_flags) > 1:
+        print("This command doesn't except any flags")
+    destination = Path(arguments[0])
+    try:
+        destination.unlink()
+    except FileNotFoundError:
+        print("File couldn't be found")
+    except PermissionError:
+        print("You don't have permission to delete this file")
+    except OSError as e:
+        print(f"ERROR: {e}")
