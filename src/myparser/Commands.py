@@ -133,3 +133,24 @@ def mkdir(arguments, allowed_flags):
         print("You don't have persmission to create folder here")
     except OSError as e:
         print(f"ERROR: {e}")
+
+
+@command("mkfile", allowed_flags=[])
+def mkfile(arguments, allowed_flags):
+    if len(arguments) > 1:
+        print("ERROR: mkfile <file name or file path>")
+        return
+    if allowed_flags:
+        print("This command doesn't except any flags")
+        return
+    file = Path(arguments[0])
+    try:
+        file.touch(exist_ok=False)
+    except FileNotFoundError:
+        print("The Destination Address couldn't be found")
+    except FileExistsError:
+        print("This file already exists in the destination")
+    except PermissionError:
+        print("You don't have the permission to create fille here")
+    except OSError as e:
+        print(f"ERROR: {e}")
