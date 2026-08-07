@@ -86,7 +86,7 @@ def rename(arguments, allowed_flags):
 
     try:
         old_path.rename(new_path)
-        print("")
+        print("Renamed")
     except PermissionError:
         print("Permission denied.")
     except OSError as e:
@@ -127,6 +127,7 @@ def mkdir(arguments, allowed_flags):
     destination = arguments[0]
     try:
         Path(destination).mkdir(parents=True, exist_ok=False)
+        print("Created")
     except FileExistsError:
         print("Directoy already exists")
     except PermissionError:
@@ -146,12 +147,13 @@ def mkfile(arguments, allowed_flags):
     file = Path(arguments[0])
     try:
         file.touch(exist_ok=False)
+        print("Created")
     except FileNotFoundError:
         print("The Destination Address couldn't be found")
     except FileExistsError:
         print("This file already exists in the destination")
     except PermissionError:
-        print("You don't have the permission to create fille here")
+        print("You don't have the permission to create file here")
     except OSError as e:
         print(f"ERROR: {e}")
 
@@ -166,6 +168,7 @@ def delfile(arguments, allowed_flags):
     destination = Path(arguments[0])
     try:
         destination.unlink()
+        print("Deleted")
     except FileNotFoundError:
         print("File couldn't be found")
     except PermissionError:
@@ -183,6 +186,7 @@ def deldir(arguments, allowed_flags):
     if not "-all" in allowed_flags:
         try:
             destination.rmdir()
+            print("Deleted")
         except FileNotFoundError:
             print("destination address couldn't be fount")
         except PermissionError:
@@ -190,4 +194,23 @@ def deldir(arguments, allowed_flags):
         except OSError as e:
             print(f"ERROR: {e}")
     else:
-        pass
+        msg = "Type this msg to delete, type anything else to revoke-: \nI reallly want to delete it"
+        print(msg, "\n")
+        usermsg = input("")
+        if usermsg == "I reallly want to delete it":
+            print("\nAre you reallly sure, you can't recover it. yes/no")
+            newmsg = input()
+            if newmsg == "yes":
+                # delete the files
+                print("Deleted")
+                pass
+            elif newmsg == "no":
+                print("ok")
+                return
+            else:
+                print(
+                    "I don't know what gibberish is that but i will take that as a no-: 😏"
+                )
+                return
+        else:
+            return
