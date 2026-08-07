@@ -114,3 +114,22 @@ def execute(arguments, allowed_flags):
         os.startfile(path)
     except OSError as e:
         print(f"Execution failed: {e}")
+
+
+@command("mkdir", allowed_flags=[])
+def mkdir(arguments, allowed_flags):
+    if len(arguments) > 1:
+        print("Only Enter Destination Address-: mkdir <destination_address>")
+        return
+    if allowed_flags:
+        print("This command doesn't except any flags")
+        return
+    destination = arguments[0]
+    try:
+        Path(destination).mkdir(parents=True, exist_ok=False)
+    except FileExistsError:
+        print("Directoy already exists")
+    except PermissionError:
+        print("You don't have persmission to create folder here")
+    except OSError as e:
+        print(f"ERROR: {e}")
