@@ -169,6 +169,25 @@ def delfile(arguments, allowed_flags):
     except FileNotFoundError:
         print("File couldn't be found")
     except PermissionError:
-        print("You don't have permission to delete this file")
+        print("Don't go deleting any files 🥹: you don't have permission b****")
     except OSError as e:
         print(f"ERROR: {e}")
+
+
+@command("deldir", allowed_flags=["-all"])
+def deldir(arguments, allowed_flags):
+    if len(arguments) > 1:
+        print("ERROR: mkfile <file name or file path>")
+        return
+    destination = Path(arguments[0])
+    if not "-all" in allowed_flags:
+        try:
+            destination.rmdir()
+        except FileNotFoundError:
+            print("destination address couldn't be fount")
+        except PermissionError:
+            print("Don't go deleting any folders 🥹: you don't have permission b****")
+        except OSError as e:
+            print(f"ERROR: {e}")
+    else:
+        pass
