@@ -35,7 +35,7 @@ def cd(arguments, allowed_flags):
 
 @command("listdir", allowed_flags=["-full", "-asc", "-desc", "-hidden"])
 def listdir(arguments, allowed_flags):
-    if len(arguments) != 1:
+    if len(arguments) > 1:
         print("Invalid number of arguments")
         return
     if not arguments:
@@ -228,3 +228,11 @@ def deldir(arguments, allowed_flags):
                 return
         else:
             return
+
+
+@command("cls", allowed_flags=[])
+def cls(arguments, allowed_flags):
+    if arguments or allowed_flags:
+        print("this command doesn't accept any arguments or flags")
+        return
+    print("\033[H\033[2J", end="", flush=True)
