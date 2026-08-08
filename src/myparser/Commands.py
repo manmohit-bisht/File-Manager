@@ -1,6 +1,7 @@
 import os
 from pathlib import Path
 from .registry import command
+from shutil import rmtree
 
 
 @command("cd", allowed_flags=[])
@@ -8,7 +9,9 @@ def cd(arguments, allowed_flags):
     if not arguments:
         print("cd: missing path!! Please enter a valid path")
         return
-
+    if len(arguments) != 1:
+        print("Please enter only 1 argument")
+        return
     if allowed_flags:
         print("Invalid command: no flags must be given")
         return
@@ -32,6 +35,9 @@ def cd(arguments, allowed_flags):
 
 @command("listdir", allowed_flags=["-full", "-asc", "-desc", "-hidden"])
 def listdir(arguments, allowed_flags):
+    if len(arguments) != 1:
+        print("Invalid number of arguments")
+        return
     if not arguments:
         path = Path.cwd()
     else:
@@ -118,8 +124,8 @@ def execute(arguments, allowed_flags):
 
 @command("mkdir", allowed_flags=[])
 def mkdir(arguments, allowed_flags):
-    if len(arguments) > 1:
-        print("Only Enter Destination Address-: mkdir <destination_address>")
+    if len(arguments) != 1:
+        print("Enter Destination Address-: mkdir <destination_address>")
         return
     if allowed_flags:
         print("This command doesn't except any flags")
@@ -138,7 +144,7 @@ def mkdir(arguments, allowed_flags):
 
 @command("mkfile", allowed_flags=[])
 def mkfile(arguments, allowed_flags):
-    if len(arguments) > 1:
+    if len(arguments) != 1:
         print("ERROR: mkfile <file name or file path>")
         return
     if allowed_flags:
@@ -160,8 +166,8 @@ def mkfile(arguments, allowed_flags):
 
 @command("delfile", allowed_flags=[])
 def delfile(arguments, allowed_flags):
-    if len(arguments) > 1:
-        print("ERROR: mkfile <file name or file path>")
+    if len(arguments) != 1:
+        print("ERROR: delfile <file name or file path>")
         return
     if len(allowed_flags) > 1:
         print("This command doesn't except any flags")
@@ -179,8 +185,8 @@ def delfile(arguments, allowed_flags):
 
 @command("deldir", allowed_flags=["-all"])
 def deldir(arguments, allowed_flags):
-    if len(arguments) > 1:
-        print("ERROR: mkfile <file name or file path>")
+    if len(arguments) != 1:
+        print("ERROR: deldir <file name or file path>")
         return
     destination = Path(arguments[0])
     if not "-all" in allowed_flags:
@@ -201,9 +207,17 @@ def deldir(arguments, allowed_flags):
             print("\nAre you reallly sure, you can't recover it. yes/no")
             newmsg = input()
             if newmsg == "yes":
-                # delete the files
-                print("Deleted")
-                pass
+                try:
+                    rmtree(destination)
+                    print("Deleted")
+                except FileNotFoundError:
+                    print("The folder couldn't be found at designated address")
+                except PermissionError:
+                    print(
+                        "Don't go deleting any folders 🥹: you don't have permission b****"
+                    )
+                except OSError as e:
+                    print(f"ERROR: {e}")
             elif newmsg == "no":
                 print("ok")
                 return
