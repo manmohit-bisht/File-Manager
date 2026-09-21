@@ -15,12 +15,24 @@ myp -start
 ## Project Structure
 
 ```text
-project/
+File Manager/
 │
-├── main.py          # CLI entry point and input handling
-├── commands.py      # File-management commands
-├── registry.py      # Command registry and decorator
-└── README.md
+├── .git/
+├── .venv/
+├── myparser.egg-info/
+│
+├── src/
+│   └── myparser/
+│       ├── __pycache__/
+│       ├── commands.py
+│       ├── main.py
+│       └── registry.py
+│
+├── myparser.egg-info/
+├── .gitignore
+├── pyproject.toml
+├── README.md
+└── requirements.txt
 ```
 
 `main.py` is responsible for starting the file manager, reading user input, tokenizing commands, separating arguments and flags, validating the input, and executing the corresponding command. The actual file-management operations are implemented in `commands.py`, while `registry.py` provides the command registry and decorator used to register each command. fileciteturn1file1L1-L6 fileciteturn1file2L1-L9
