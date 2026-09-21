@@ -139,7 +139,7 @@ cls
 
 The file manager validates commands before execution. After tokenizing the input, it checks whether the entered command exists in `COMMAND_REGISTRY`. It then compares the supplied flags against the flags registered for that command. If an invalid command or unsupported flag is detected, the command is rejected instead of being executed. fileciteturn1file1L18-L40
 
-This approach also makes the system extensible. A new command can be added by defining a function in `commands.py` and registering it with the `@command` decorator in the same way as the existing commands. fileciteturn1file0L7-L8
+This approach also makes the system extensible. A new command can be added by defining a function in `commands.py` and registering it with the `@command` decorator in the same way as the existing commands. 
 
 ## Future Work
 
