@@ -35,13 +35,13 @@ File Manager/
 └── requirements.txt
 ```
 
-`main.py` is responsible for starting the file manager, reading user input, tokenizing commands, separating arguments and flags, validating the input, and executing the corresponding command. The actual file-management operations are implemented in `commands.py`, while `registry.py` provides the command registry and decorator used to register each command. fileciteturn1file1L1-L6 fileciteturn1file2L1-L9
+`main.py` is responsible for starting the file manager, reading user input, tokenizing commands, separating arguments and flags, validating the input, and executing the corresponding command. The actual file-management operations are implemented in `commands.py`, while `registry.py` provides the command registry and decorator used to register each command.
 
 ## How It Works
 
-The project uses a registry-based command system. Each command is registered using the `@command` decorator along with the flags that the command supports. For example, `listdir` is registered with flags such as `-full`, `-asc`, `-desc`, and `-hidden`, while commands such as `cd` do not accept any flags. The registry stores both the command function and its supported flags so that the main program can look them up when a user enters a command. fileciteturn1file0L36-L40 fileciteturn1file2L4-L7
+The project uses a registry-based command system. Each command is registered using the `@command` decorator along with the flags that the command supports. For example, `listdir` is registered with flags such as `-full`, `-asc`, `-desc`, and `-hidden`, while commands such as `cd` do not accept any flags. The registry stores both the command function and its supported flags so that the main program can look them up when a user enters a command.
 
-When the user enters a command, `main.py` tokenizes the input using `shlex`, separates normal arguments from flags, checks whether the command exists in the registry, validates the supplied flags, and finally calls the corresponding function. This keeps the command-processing logic separate from the actual file operations and makes it easier to add new commands later. fileciteturn1file1L9-L40
+When the user enters a command, `main.py` tokenizes the input using `shlex`, separates normal arguments from flags, checks whether the command exists in the registry, validates the supplied flags, and finally calls the corresponding function. This keeps the command-processing logic separate from the actual file operations and makes it easier to add new commands later. 
 
 ## Running the File Manager
 
@@ -57,7 +57,7 @@ or:
 python main.py --myp
 ```
 
-Once started, the program displays the current working directory and waits for commands. Typing either `exit` or `quit` terminates the command loop. The current implementation changes the working directory to a path configured directly inside `main.py`, so that path should be adjusted for a different system. fileciteturn1file1L44-L63
+Once started, the program displays the current working directory and waits for commands. Typing either `exit` or `quit` terminates the command loop. The current implementation changes the working directory to a path configured directly inside `main.py`, so that path should be adjusted for a different system. 
 
 # Commands
 
@@ -81,7 +81,7 @@ The `cd` command changes the current working directory. It accepts exactly one p
 cd "C:\Users\manmo\Documents"
 ```
 
-The `listdir` command displays the contents of the current directory, or of a directory supplied as an argument. It can also modify how the results are displayed through its supported flags. The `-full` flag prints the complete paths, `-asc` sorts the results in ascending order, `-desc` sorts them in descending order, and `-hidden` includes hidden files and directories. The `-asc` and `-desc` flags cannot be used together. fileciteturn1file0L36-L69
+The `listdir` command displays the contents of the current directory, or of a directory supplied as an argument. It can also modify how the results are displayed through its supported flags. The `-full` flag prints the complete paths, `-asc` sorts the results in ascending order, `-desc` sorts them in descending order, and `-hidden` includes hidden files and directories. The `-asc` and `-desc` flags cannot be used together.
 
 ```bash
 listdir
@@ -122,7 +122,7 @@ The `delfile` command removes a file from the file system. It checks for conditi
 delfile "notes.txt"
 ```
 
-The `deldir` command removes a directory. By default, it removes an empty directory using `rmdir()`. The optional `-all` flag enables recursive deletion using `shutil.rmtree()`, but the implementation asks the user for additional confirmation before carrying out the operation. fileciteturn1file0L186-L230
+The `deldir` command removes a directory. By default, it removes an empty directory using `rmdir()`. The optional `-all` flag enables recursive deletion using `shutil.rmtree()`, but the implementation asks the user for additional confirmation before carrying out the operation.
 
 ```bash
 deldir "Old Folder"
@@ -137,7 +137,7 @@ cls
 
 ## Command Validation
 
-The file manager validates commands before execution. After tokenizing the input, it checks whether the entered command exists in `COMMAND_REGISTRY`. It then compares the supplied flags against the flags registered for that command. If an invalid command or unsupported flag is detected, the command is rejected instead of being executed. fileciteturn1file1L18-L40
+The file manager validates commands before execution. After tokenizing the input, it checks whether the entered command exists in `COMMAND_REGISTRY`. It then compares the supplied flags against the flags registered for that command. If an invalid command or unsupported flag is detected, the command is rejected instead of being executed.
 
 This approach also makes the system extensible. A new command can be added by defining a function in `commands.py` and registering it with the `@command` decorator in the same way as the existing commands. 
 
