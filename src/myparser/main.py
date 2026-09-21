@@ -20,9 +20,12 @@ def manipulation():
         arguments = [word for word in tokens[1:] if not word.startswith("-")]
         arguments = [arg.strip('"') for arg in arguments]
         flags = [word for word in tokens[1:] if word.startswith("-")]
-        print(tokens)
-        print(arguments)
-        print(flags)
+
+        # for debugging purposes
+        # print(tokens)
+        # print(arguments)
+        # print(flags)
+
         # Executing commands
         if cmd_name not in COMMAND_REGISTRY:
             print("Not a valid command, please enter a valid command")
@@ -53,7 +56,7 @@ def main():
     )
     args = parser.parse_args()
 
-    os.chdir(r"C:\Users\manmo")
+    os.chdir(r"C:")
 
     if args.myp:
         print("\n", Path.cwd(), ">>", end=" ")
