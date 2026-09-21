@@ -1,21 +1,17 @@
 # Python CLI File Manager
 
-A lightweight command-line file manager built in Python. It provides basic file and directory operations through a custom command system with support for command-specific flags.
-This is made to mimic the basic operations of a terminal file manager the core idea is to make tag based sorting available in file manager with strict tree based directory structure.
-## Features
+A lightweight command-line file manager built in Python. The project provides a custom command-line interface for performing common file and directory operations such as navigating directories, listing files, creating and deleting files, renaming items, and opening files. Instead of relying on separate `if-else` blocks for every command, the project uses a command registry so that commands can be registered and handled in a modular way.
 
-- Navigate between directories
-- List files and folders
-- Sort directory listings
-- Show hidden files
-- Create and delete files
-- Create and delete directories
-- Rename files and directories
-- Open/execute files
-- Clear the terminal
-- Custom command registry using decorators
-- Command and flag validation
+⚠️⚠️ I haven't changed the default directory right now it's set to-:
+```
+C:
+```
+Please change it to accordingly to your computer in main.py line 59.
 
+ℹ️ℹ️ after compiling the program use following command to run it from anywhere:
+```
+myp -start
+```
 ## Project Structure
 
 ```text
@@ -27,23 +23,17 @@ project/
 └── README.md
 ```
 
+`main.py` is responsible for starting the file manager, reading user input, tokenizing commands, separating arguments and flags, validating the input, and executing the corresponding command. The actual file-management operations are implemented in `commands.py`, while `registry.py` provides the command registry and decorator used to register each command. fileciteturn1file1L1-L6 fileciteturn1file2L1-L9
+
 ## How It Works
 
-The project uses a command registry to keep commands modular.
+The project uses a registry-based command system. Each command is registered using the `@command` decorator along with the flags that the command supports. For example, `listdir` is registered with flags such as `-full`, `-asc`, `-desc`, and `-hidden`, while commands such as `cd` do not accept any flags. The registry stores both the command function and its supported flags so that the main program can look them up when a user enters a command. fileciteturn1file0L36-L40 fileciteturn1file2L4-L7
 
-Commands are registered using the `@command` decorator:
-
-```python
-@command("cd", allowed_flags=[])
-def cd(arguments, allowed_flags):
-    ...
-```
-
-The registry stores the command function and its supported flags. When the user enters a command, `main.py` tokenizes the input, separates arguments from flags, validates them, and executes the corresponding registered function. fileciteturn1file2L1-L9 fileciteturn1file1L9-L40
+When the user enters a command, `main.py` tokenizes the input using `shlex`, separates normal arguments from flags, checks whether the command exists in the registry, validates the supplied flags, and finally calls the corresponding function. This keeps the command-processing logic separate from the actual file operations and makes it easier to add new commands later. fileciteturn1file1L9-L40
 
 ## Running the File Manager
 
-The CLI is started using:
+The CLI can be started with:
 
 ```bash
 python main.py -start
@@ -55,25 +45,7 @@ or:
 python main.py --myp
 ```
 
-The program then waits for commands.
-
-Type:
-
-```text
-exit
-```
-
-or:
-
-```text
-quit
-```
-
-to close the file manager. fileciteturn1file1L9-L18
-
-> **Note:** The current implementation is configured for Windows and starts from the path defined in `main.py`.
-
----
+Once started, the program displays the current working directory and waits for commands. Typing either `exit` or `quit` terminates the command loop. The current implementation changes the working directory to a path configured directly inside `main.py`, so that path should be adjusted for a different system. fileciteturn1file1L44-L63
 
 # Commands
 
@@ -89,189 +61,84 @@ to close the file manager. fileciteturn1file1L9-L18
 | `deldir` | `deldir <path>` | `-all` | Delete a directory |
 | `cls` | `cls` | — | Clear the terminal |
 
----
+## Command Usage
 
-## Command Examples
-
-### `cd`
-
-Change the current working directory:
+The `cd` command changes the current working directory. It accepts exactly one path and checks that the supplied path exists and refers to a directory before changing into it.
 
 ```bash
 cd "C:\Users\manmo\Documents"
 ```
 
-The command validates that the supplied path exists and is a directory. fileciteturn1file0L7-L33
-
-### `listdir`
-
-List the contents of the current directory:
+The `listdir` command displays the contents of the current directory, or of a directory supplied as an argument. It can also modify how the results are displayed through its supported flags. The `-full` flag prints the complete paths, `-asc` sorts the results in ascending order, `-desc` sorts them in descending order, and `-hidden` includes hidden files and directories. The `-asc` and `-desc` flags cannot be used together. fileciteturn1file0L36-L69
 
 ```bash
 listdir
-```
-
-List another directory:
-
-```bash
 listdir "C:\Users\manmo\Documents"
-```
-
-Available flags:
-
-```bash
 listdir -full
 listdir -asc
 listdir -desc
 listdir -hidden
 ```
 
-- `-full` → display full paths
-- `-asc` → ascending order
-- `-desc` → descending order
-- `-hidden` → include hidden files/directories
-
-`-asc` and `-desc` cannot be used together. fileciteturn1file0L36-L69
-
-### `rename`
+The `rename` command changes the name or path of a file or directory. It requires both the existing path and the new path.
 
 ```bash
 rename old.txt new.txt
 ```
 
-Renames a file or directory.
-
-### `execute`
+The `execute` command opens a file using the operating system. In the current implementation, this is handled through Python's Windows-specific `os.startfile()` function.
 
 ```bash
 execute "program.exe"
 ```
 
-Opens a file using the operating system. The current implementation uses Windows `os.startfile()`. fileciteturn1file0L102-L122
-
-### `mkdir`
+The `mkdir` command creates a new directory. The implementation uses `Path.mkdir()` with parent creation enabled, which allows missing parent directories to be created when required.
 
 ```bash
 mkdir "New Folder"
 ```
 
-Creates a directory, including missing parent directories when necessary. fileciteturn1file0L125-L142
-
-### `mkfile`
+The `mkfile` command creates a new empty file at the specified path. It uses `Path.touch()` and will report an error if the file already exists.
 
 ```bash
 mkfile "notes.txt"
 ```
 
-Creates a new empty file. fileciteturn1file0L145-L164
-
-### `delfile`
+The `delfile` command removes a file from the file system. It checks for conditions such as a missing file or insufficient permissions and reports the corresponding error.
 
 ```bash
 delfile "notes.txt"
 ```
 
-Deletes a file. fileciteturn1file0L167-L183
-
-### `deldir`
-
-Delete an empty directory:
+The `deldir` command removes a directory. By default, it removes an empty directory using `rmdir()`. The optional `-all` flag enables recursive deletion using `shutil.rmtree()`, but the implementation asks the user for additional confirmation before carrying out the operation. fileciteturn1file0L186-L230
 
 ```bash
 deldir "Old Folder"
-```
-
-Delete a directory recursively:
-
-```bash
 deldir "Old Folder" -all
 ```
 
-The `-all` option requires additional confirmation before recursively deleting the directory and its contents. fileciteturn1file0L186-L230
-
-### `cls`
+Finally, the `cls` command clears the terminal screen and does not accept any arguments or flags.
 
 ```bash
 cls
 ```
 
-Clears the terminal screen. fileciteturn1file0L233-L238
+## Command Validation
 
----
+The file manager validates commands before execution. After tokenizing the input, it checks whether the entered command exists in `COMMAND_REGISTRY`. It then compares the supplied flags against the flags registered for that command. If an invalid command or unsupported flag is detected, the command is rejected instead of being executed. fileciteturn1file1L18-L40
 
-# Command Validation
+This approach also makes the system extensible. A new command can be added by defining a function in `commands.py` and registering it with the `@command` decorator in the same way as the existing commands. fileciteturn1file0L7-L8
 
-Before executing a command, the CLI:
+## Future Work
 
-1. Tokenizes the user's input.
-2. Separates arguments and flags.
-3. Checks whether the command exists.
-4. Checks whether supplied flags are supported.
-5. Executes the registered command.
+One planned improvement is **batch processing with multithreading**. Instead of processing one file operation at a time, the file manager could accept a group of files and perform independent operations concurrently. This could be particularly useful when processing large numbers of files, where multiple operations can be handled at the same time.
 
-For example:
-
-```text
-listdir -asc
-```
-
-is parsed into:
-
-```text
-Command:  listdir
-Argument: none
-Flag:     -asc
-```
-
-This allows every command to define its own supported flags through the registry. fileciteturn1file1L18-L40
-
----
-
-# Future Work
-
-### Batch Processing with Multithreading
-
-Add support for performing operations on multiple files simultaneously.
-
-For example:
-
-```text
-batch rename ...
-batch execute ...
-batch delete ...
-```
-
-Multithreading could be used to process independent file operations concurrently, improving performance when working with large numbers of files.
-
-### Tag-Based Sorting
-
-Add a flexible tagging system that allows users to organize and filter files using custom tags rather than relying only on filename or directory structure.
-
-For example:
-
-```text
-tag project report
-tag important
-tag college
-```
-
-Files could then be searched or sorted using their tags.
-
----
+Another planned feature is **tag-based sorting**. The current `listdir` command mainly works with directory structure and alphabetical sorting, but a tagging system could allow files to be associated with custom categories such as `project`, `college`, `important`, or `documents`. Users could then filter or organize files based on those tags, providing a more flexible way of managing files.
 
 ## Tech Stack
 
-- **Python**
-- `pathlib` — file and directory operations
-- `argparse` — command-line argument handling
-- `shlex` — command tokenization
-- `os` — operating-system operations
-- `shutil` — recursive directory deletion
+The project is written in **Python** and uses `pathlib` for file and directory operations, `argparse` for command-line startup options, `shlex` for parsing user input, `os` for operating-system operations, and `shutil` for recursive directory deletion.
 
 ## Current Limitations
 
-- The current implementation is primarily designed for **Windows**.
-- The starting directory is currently configured directly in `main.py`.
-- The interface is command-line based.
-- Batch processing is not implemented yet.
-- Tag-based file organization is not implemented yet.
+The current implementation is primarily designed for Windows because the `execute` command uses `os.startfile()`, and the initial working directory is currently hard-coded in `main.py`. The file manager is also entirely command-line based, and features such as batch processing and tag-based organization are planned for future versions.
